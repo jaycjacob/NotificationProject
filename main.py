@@ -5,10 +5,8 @@ from plyer import notification #for getting notification on PC
 title = 'Notification App!'
 message= ''
 time_mes = {}
-now = datetime.datetime.now()
-#current_time = now.strftime('%H:%M:%S')
-hy = 18
 
+count = 0
 
 def pop_not():
     notification.notify(title= title,
@@ -16,16 +14,19 @@ def pop_not():
                     app_icon = None,
                     timeout= 10,
                     toast=False)
+    time.sleep(25)
 
 
+while count<2:
+    x = str(input("Enter time in the format HHTT"))
+    y = input("Enter message to be displayed")
+    time_mes[x] = y
+    count += 1
 
-x = input("Enter time in the format hour, minutes, seconds")
-y = input("Enter message to be displayed")
-time_mes[x] = y
-#    b = input("Enter y to continue or N to exit")
-if str(hy) in time_mes:
-    message = "happy"
-#    message = time_mes[current_time]
-    pop_not()
-else:
-    print("none")
+while True:
+    now = datetime.datetime.now()
+    current_time = now.strftime('%H:%M:%S')
+    now_time = str(current_time)[0:5]
+    if now_time in time_mes:
+        message = time_mes[now_time]
+        pop_not()
