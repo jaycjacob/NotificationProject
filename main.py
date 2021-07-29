@@ -1,4 +1,5 @@
 import sys
+import threading
 import tkinter as tk
 import time
 import datetime
@@ -6,6 +7,7 @@ from plyer import notification
 
 title = 'Notification App!'
 time_mes = {}
+cancel = 0
 
 
 def notify_func():
@@ -19,7 +21,12 @@ def notify_func():
                                 app_icon=None,
                                 timeout=10,
                                 toast=False)
-            time.sleep(25)
+            time.sleep(10)
+        if cancel == 0:
+            continue
+        else:
+            print("cancelled")
+            break
 
 
 master = tk.Tk()
@@ -30,23 +37,35 @@ user_input = tk.Entry(master)
 user_input2 = tk.Entry(master)
 user_input.grid(row=0, column=1)
 user_input2.grid(row=1, column=1)
-ttt = str(user_input.get())
 
 
 def set_notification():
+    global cancel
+    cancel = 0
     t1 = user_input.get()
     n1 = user_input2.get()
     time_mes[t1] = n1
 
 
-tk.Button(master, text='Quit', command=master.quit and sys.exit).grid(row=3,
-                                                                      column=0,
-                                                                      sticky=tk.W,
-                                                                      pady=4)
-tk.Button(master, text='Notify', command=notify_func).grid(row=3,
-                                                           column=2,
-                                                           sticky=tk.W,
-                                                           pady=4)
+def ha():
+    global cancel
+    cancel = 1
+
+
+def quit_thread():
+    thread = threading.Thread(target=ha)
+    thread.start()
+    thread.join()
+
+
+tk.Button(master, text='Quit', command=quit_thread).grid(row=3,
+                                                         column=0,
+                                                         sticky=tk.W,
+                                                         pady=4)
+tk.Button(master, text='Notify', command=lambda: threading.Thread(target=notify_func).start()).grid(row=3,
+                                                                                                    column=2,
+                                                                                                    sticky=tk.W,
+                                                                                                    pady=4)
 tk.Button(master, text='Set', command=set_notification).grid(row=2,
                                                              column=1,
                                                              sticky=tk.W,
