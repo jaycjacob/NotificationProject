@@ -7,11 +7,14 @@ from plyer import notification
 
 title = 'Notification App!'
 time_mes = {}
-cancel = 0
+running = True
 
 
+# A function to handle notification
 def notify_func():
-    while True:
+    global running
+    set_notification()
+    while running:
         now = datetime.datetime.now()
         current_time = now.strftime('%H:%M:%S')
         now_time = str(current_time)[0:5]
@@ -22,11 +25,6 @@ def notify_func():
                                 timeout=10,
                                 toast=False)
             time.sleep(10)
-        if cancel == 0:
-            continue
-        else:
-            print("cancelled")
-            break
 
 
 master = tk.Tk()
@@ -39,36 +37,29 @@ user_input.grid(row=0, column=1)
 user_input2.grid(row=1, column=1)
 
 
+# Set the condition if not true and enter time and notification message to the dictionary
 def set_notification():
-    global cancel
-    cancel = 0
+    global running
+    if not running:
+        running = True
     t1 = user_input.get()
     n1 = user_input2.get()
     time_mes[t1] = n1
 
 
-def ha():
-    global cancel
-    cancel = 1
+def stop():
+    global running
+    running = False
+    master.quit()
 
 
-def quit_thread():
-    thread = threading.Thread(target=ha)
-    thread.start()
-    thread.join()
-
-
-tk.Button(master, text='Quit', command=quit_thread).grid(row=3,
-                                                         column=0,
-                                                         sticky=tk.W,
-                                                         pady=4)
+tk.Button(master, text='Quit', command=stop).grid(row=3,
+                                                  column=0,
+                                                  sticky=tk.W,
+                                                  pady=4)
 tk.Button(master, text='Notify', command=lambda: threading.Thread(target=notify_func).start()).grid(row=3,
                                                                                                     column=2,
                                                                                                     sticky=tk.W,
                                                                                                     pady=4)
-tk.Button(master, text='Set', command=set_notification).grid(row=2,
-                                                             column=1,
-                                                             sticky=tk.W,
-                                                             pady=4)
 
 master.mainloop()
