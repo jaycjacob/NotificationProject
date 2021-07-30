@@ -13,7 +13,8 @@ running = True
 # A function to handle notification
 def notify_func():
     global running
-    set_notification()
+    if not running:
+        running = True
     while running:
         now = datetime.datetime.now()
         current_time = now.strftime('%H:%M:%S')
@@ -39,12 +40,14 @@ user_input2.grid(row=1, column=1)
 
 # Set the condition if not true and enter time and notification message to the dictionary
 def set_notification():
-    global running
-    if not running:
-        running = True
     t1 = user_input.get()
     n1 = user_input2.get()
     time_mes[t1] = n1
+
+
+def add():
+    set_notification()
+    print("added")
 
 
 def stop():
@@ -61,5 +64,9 @@ tk.Button(master, text='Notify', command=lambda: threading.Thread(target=notify_
                                                                                                     column=2,
                                                                                                     sticky=tk.W,
                                                                                                     pady=4)
+tk.Button(master, text='Add', command=add).grid(row=2,
+                                                column=1,
+                                                sticky=tk.W,
+                                                pady=4)
 
 master.mainloop()
