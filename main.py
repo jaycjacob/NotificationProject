@@ -5,8 +5,9 @@ import time
 import datetime
 from plyer import notification
 
-title = 'Notification App!'
+title = 'Notification App'
 time_mes = {}
+bs = []
 running = True
 
 
@@ -28,26 +29,14 @@ def notify_func():
             time.sleep(10)
 
 
-master = tk.Tk()
-master.title("set notification")
-tk.Label(master, text='Time for notification').grid(row=0)
-tk.Label(master, text='Notification message').grid(row=1)
-user_input = tk.Entry(master)
-user_input2 = tk.Entry(master)
-user_input.grid(row=0, column=1)
-user_input2.grid(row=1, column=1)
-
-
 # Set the condition if not true and enter time and notification message to the dictionary
 def set_notification():
+    global bs
     t1 = user_input.get()
     n1 = user_input2.get()
     time_mes[t1] = n1
-
-
-def add():
-    set_notification()
-    print("added")
+    bs = list(time_mes.items())
+    add_listbox()
 
 
 def stop():
@@ -55,6 +44,21 @@ def stop():
     running = False
     master.quit()
 
+
+def add_listbox():
+    global bs
+    global var
+    var.set(bs)
+
+
+master = tk.Tk()
+master.title("set notification")
+tk.Label(master, text='Notification time').grid(row=0)
+tk.Label(master, text='Notification message').grid(row=1)
+user_input = tk.Entry(master)
+user_input2 = tk.Entry(master)
+user_input.grid(row=0, column=1)
+user_input2.grid(row=1, column=1)
 
 tk.Button(master, text='Quit', command=stop).grid(row=3,
                                                   column=0,
@@ -64,9 +68,18 @@ tk.Button(master, text='Notify', command=lambda: threading.Thread(target=notify_
                                                                                                     column=2,
                                                                                                     sticky=tk.W,
                                                                                                     pady=4)
-tk.Button(master, text='Add', command=add).grid(row=2,
-                                                column=1,
-                                                sticky=tk.W,
-                                                pady=4)
+tk.Button(master, text='Add', command=set_notification).grid(row=2,
+                                                             column=1,
+                                                             sticky=tk.W,
+                                                             pady=4)
+tk.Label(master, text='Notifications').grid(row=0,
+                                            column=3,
+                                            sticky=tk.W,
+                                            pady=4)
+
+var = tk.StringVar()
+
+tk.Listbox(master, listvariable=var).grid(row=1,
+                                          column=3)
 
 master.mainloop()
