@@ -51,6 +51,18 @@ def add_listbox():
     var.set(bs)
 
 
+def delete():
+    global bs
+    # index of the selected item in the listbox
+    index = lb.curselection()
+    # then find the item in the list
+    list_item = bs[index[0]]
+    # delete in the dictionary
+    del time_mes[list_item[0]]
+    bs.remove(list_item)
+    add_listbox()
+
+
 master = tk.Tk()
 master.title("set notification")
 tk.Label(master, text='Notification time').grid(row=0)
@@ -79,7 +91,13 @@ tk.Label(master, text='Notifications').grid(row=0,
 
 var = tk.StringVar()
 
-tk.Listbox(master, listvariable=var).grid(row=1,
-                                          column=3)
+lb = tk.Listbox(master, listvariable=var)
+lb.grid(row=1,
+        column=3)
+
+tk.Button(master, text="Delete", command=delete).grid(row=3,
+                                                      column=4,
+                                                      sticky=tk.W,
+                                                      pady=4)
 
 master.mainloop()
