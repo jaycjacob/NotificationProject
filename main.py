@@ -33,10 +33,25 @@ def notify_func():
 def set_notification():
     global bs
     t1 = user_input.get()
-    n1 = user_input2.get()
-    time_mes[t1] = n1
-    bs = list(time_mes.items())
-    add_listbox()
+    # validating time
+    try:
+        t = t1.split(':')
+        print(t[0])
+        index_0 = int(t[0])
+        index_1 = int(t[1])
+        if 24 > index_0 >= 0 and 60 > index_1 >= 0:
+            n1 = user_input2.get()
+            time_mes[t1] = n1
+            bs = list(time_mes.items())
+            add_listbox()
+        else:
+            print("Wrong time")
+    except ValueError:
+        print("Please input time")
+        return False
+    except IndexError:
+        print("Please input HH:MM format")
+        return False
 
 
 def stop():
